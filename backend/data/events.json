@@ -1,9 +1,28 @@
 [
   {
-    "address": "2jxLouhf4GBYe3g6oUbad6",
-    "event_id": "2jxLouhf4GBYe3g6oUbad6",
+    "address": "1Adam3usQMbQWScA5AXnnDsRMeZeCh6ovu",
+    "event_id": "ed3f7d40-a6b2-11e7-94db-efb4badc6c8b",
     "type": "address_created",
-    "timestamp": "2017-08-22T19:06:51.576Z",
-    "data": "{\"foo\":\"bar\"}"
+    "timestamp": "2017-10-01T14:15:07.284Z"
+  },
+  {
+    "address": "1Adam3usQMbQWScA5AXnnDsRMeZeCh6ovu",
+    "event_id": "ee3f7d90-a6b2-11e7-94db-efb4badc6c9c",
+    "type": "address_verified",
+    "timestamp": "2017-10-01T15:15:07.284Z",
+    "data": "{\"status\":\"accepted\"}"
+  },
+  {
+    "address": "1BoatSLRHtKNngkdXEeobR76b53LETtpyT",
+    "event_id": "ed3f7d40-a6b2-11e7-94db-efb4badc6c8b",
+    "type": "address_created",
+    "timestamp": "2017-10-01T14:15:07.284Z"
+  },
+  {
+    "address": "1BoatSLRHtKNngkdXEeobR76b53LETtpyT",
+    "event_id": "ee3f7d90-a6b2-11e7-94db-efb4badc6c9c",
+    "type": "address_verified",
+    "timestamp": "2017-10-01T15:15:07.284Z",
+    "data": "{\"status\":\"rejected\"}"
   }
 ]

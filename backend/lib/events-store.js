@@ -51,7 +51,7 @@ export function loadEvents(address) {
       .exec((error, events) => {
         if (error) {
           reject({
-            order_id,
+            address,
             error,
           });
         } else {

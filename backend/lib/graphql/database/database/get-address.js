@@ -13,6 +13,7 @@ import {
 } from '../../../../model/consts'
 import { loadEvents } from '../../../../lib/events-store';
 
+
 export default async (address) => {
   return loadEvents(address)
     .then(events => {
@@ -29,8 +30,8 @@ export function resolveStatus(events) {
   if (address_created) {
     const address_verified = find(events, { type: event_type.address_verified });
     if (address_verified) {
-      const approved = address_verified.data && address_verified.data.status === 'passed'
-      return approved ? address_status.accepted : address_status.rejected;
+      const accepted = address_verified.data && address_verified.data.status === 'accepted';
+      return accepted ? address_status.accepted : address_status.rejected;
     } else {
       return address_status.pending;
     }
