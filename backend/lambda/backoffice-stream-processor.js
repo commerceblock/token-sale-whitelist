@@ -1,7 +1,10 @@
 
 // imports
 import AWS from 'aws-sdk'
-import { isEmpty } from 'lodash'
+import {
+  isEmpty,
+  filter,
+} from 'lodash'
 
 // local imports
 import {
@@ -26,13 +29,14 @@ export function process(event, context, callback) {
   // https://gist.github.com/hassy/eaea5a958067211f2fed02ead13c2678
   context.callbackWaitsForEmptyEventLoop = false;
 
-  // parse events
+  // parse event
   const events = parseEvent(event);
-  if (isEmpty(events)) {
+  const filteredEvents = filter(events, { type: event_type.address_created });
+  if (isEmpty(filteredEvents)) {
     log.info('empty batch');
     return callback();
   } else {
-    eventSQL.bulkCreate(events)
+    eventSQL.bulkCreate(filteredEvents)
       .then(result => {
         const count = result.length || 0;
         log.info(`bulk created ${count}`);
@@ -44,11 +48,3 @@ export function process(event, context, callback) {
       });
   }
 }
-
-// function close() {
-//   return sequelize
-//     .connectionManager
-//     .close()
-//     .then(() => log.info('shut down gracefully'))
-//     .catch((err) => log.error({ err }, 'failed to close connection manager'))
-// }
