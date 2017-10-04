@@ -8,6 +8,8 @@
     "lodash": "^4.17.4",
     "uuid": "^2.0.3",
     "graphql": "^0.9.1",
-    "babel-polyfill": "^6.16.0"
+    "babel-polyfill": "^6.16.0",
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.13.3"
   }
 }
