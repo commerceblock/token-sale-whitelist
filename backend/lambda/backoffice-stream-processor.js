@@ -1,36 +1,54 @@
 
 // imports
-import AWS from 'aws-sdk';
+import AWS from 'aws-sdk'
+import { isEmpty } from 'lodash'
 
 // local imports
 import {
   parseEvent,
-  executePromises,
-} from '../lib/http-util';
+} from '../lib/http-util'
 import {
   event_type,
-} from '../model/consts';
+} from '../model/consts'
+import eventSQL from '../model/event-sql'
+import sequelize from '../lib/sequelize'
 
 // logging
-import { createLogger } from 'bunyan';
+import { createLogger } from 'bunyan'
+
 const log = createLogger({ name: 'backoffice-stream-processor' });
 
-// TOD: inject externally
+
 export function process(event, context, callback) {
   log.info(event, 'Received event');
+  // set callbackWaitsForEmptyEventLoop to false to exit without waiting for event loop
+  // this is needed because of the background activity in sql driver
+  // https://gist.github.com/hassy/eaea5a958067211f2fed02ead13c2678
+  context.callbackWaitsForEmptyEventLoop = false;
+
   // parse events
-  const events = httpUtil.parseEvent(event);
-  // filter events
-  const filteredEvents = _.filter(events, {
-    type: event_type.address_created
-  });
-  // build promises
-  const promises = Promise.all(_.map(filteredEvents, createPromise));
-  // execute promises
-  return executePromises(promises, log, callback);
-};
+  const events = parseEvent(event);
+  if (isEmpty(events)) {
+    log.info('empty batch');
+    return callback();
+  } else {
+    eventSQL.bulkCreate(events)
+      .then(result => {
+        const count = result.length || 0;
+        log.info(`bulk created ${count}`);
+        callback();
+      })
+      .catch(err => {
+        log.error({ err }, 'failed to process events');
+        callback(err);
+      });
+  }
+}
 
-const createPromise = (event) => {
-  // TODO
-
-};
+// function close() {
+//   return sequelize
+//     .connectionManager
+//     .close()
+//     .then(() => log.info('shut down gracefully'))
+//     .catch((err) => log.error({ err }, 'failed to close connection manager'))
+// }
