@@ -12,7 +12,7 @@ if (process.env.IS_OFFLINE) {
   dynamoose.AWS.config.update({
     accessKeyId: 'AKID',
     secretAccessKey: 'SECRET',
-    region: 'test'
+    region: 'test',
   });
   dynamoose.local();
 }
@@ -28,7 +28,7 @@ dynamoose.AWS.config.update({
 dynamoose.AWS.config.update({
   maxRetries: 3,
   retryDelayOptions: {
-    customBackoff: (count) => 50,
+    customBackoff: () => 50,
   },
 });
 
