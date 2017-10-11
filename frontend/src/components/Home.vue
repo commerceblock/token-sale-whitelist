@@ -82,7 +82,8 @@ export default {
     },
     handleGenericError (error) {
       console.log(error);
-      this.errorResponse = "Unexpected error occured, please try again.";
+      // this.errorResponse = "Unexpected error occured, please try again.";
+      this.errorResponse = error.graphQLErrors[0].message;
     },
     doCheck () {
       return this.apolloClient
