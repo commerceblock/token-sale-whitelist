@@ -69,6 +69,7 @@ export default {
       skip() {
         return isEmpty(this.address);
       },
+      pollInterval: 5000,
     }
   }
 }
