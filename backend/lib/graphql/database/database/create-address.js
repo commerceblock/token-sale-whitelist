@@ -55,7 +55,7 @@ let isChecksumAddress = function (address) {
 // this function combines the btc check with the ethereum check
 const checkEthBtcAddress = (address) => {
   if (address[0] !== '0' && address[1] !== 'x') {
-    if (!WAValidator.validate(address, 'BTC')) {
+    if (!WAValidator.validate(address, 'BTC', 'both')) {
       throw 'Bitcoin Address not valid.';
     }
   } else if (!isEtherAddress(address)){
@@ -67,16 +67,16 @@ const checkEthBtcAddress = (address) => {
 
 export default async (addressInput) => {
   const address = addressInput.address
+  // if length > 50, we throw immediatelly
+  if(address.length > 50) {
+    throw "Address length is not valid."
+  }
+  
+  // Otherwise, we go to check the address
+  checkEthBtcAddress(address)
 
   return loadEvents(address)
     .then(events => {
-      // if length > 50, we throw immediatelly
-      if(address.length > 50) {
-        throw "Address length is not valid."
-      }
-      // Otherwise, we go to check the address
-      checkEthBtcAddress(address)
-
       const address_created = find(events, { type: event_type.address_created });
       if (!address_created) {
         const payload = {
