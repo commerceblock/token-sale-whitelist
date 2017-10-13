@@ -14,6 +14,10 @@ const AddressInputType = new GraphQLInputObjectType({
       type: new GraphQLNonNull(GraphQLString),
       description: 'address (btc or eth)',
     },
+    refId: {
+      type: GraphQLString,
+      description: 'Reference id',
+    },
   }),
 });
 

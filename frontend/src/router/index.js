@@ -16,6 +16,7 @@ export default new Router({
       path: '/',
       name: 'Home',
       component: Home,
+      props: (route) => ({ refId: route.query.ref })
     },
     {
       path: '/address/:id',

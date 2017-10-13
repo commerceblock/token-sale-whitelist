@@ -51,6 +51,7 @@ import  endpoints from '../lib/endpoints'
 
 export default {
   name: 'Home',
+  props: ['refId'],
   data: function() {
     return {
       address: null,
@@ -94,6 +95,7 @@ export default {
           mutation: gql`mutation {
                   createAddress(addressInput: {
                     address: "${this.address}"
+                    refId: "${this.sanitizedRefId}"
                   }) {
                     address
                     status
@@ -116,6 +118,9 @@ export default {
     },
     apolloClient: function() {
       return this.$apollo.provider.defaultClient;
+    },
+    sanitizedRefId: function() {
+      return !isEmpty(this.refId) && this.refId.substring(0, 50);
     }
   },
 }

@@ -28,6 +28,10 @@ export default async (addressInput) => {
           type: event_type.address_created,
           timestamp: new Date().toISOString(),
         };
+        const data = extractRefId(addressInput.refId);
+        if (data) {
+          payload.data = data;
+        }
         return saveEvent(payload);
       } else {
         return address_created;
@@ -38,3 +42,12 @@ export default async (addressInput) => {
       status: address_status.pending
     }));
 };
+
+function extractRefId(refId) {
+  if (isString(refId)) {
+    return {
+      ref_id: refId.substring(0, 50)
+    };
+  }
+  return null;
+}
