@@ -3,10 +3,9 @@
     <div class="modal-mask">
       <div class="modal-wrapper">
         <div class="modal-container">
-          <modal v-if="showModal" />
           <div class="modal-header">
             <slot name="header">
-              <span class="tab-title">Welcome to CommerceBlock Address Checker Application</span>
+              <span class="tab-title">Welcome to CommerceBlock Whitelist Service</span>
             </slot>
           </div>
           <div class="modal-body">
@@ -20,8 +19,18 @@
                 </div>
               </div>
               <div class="row">
+                <div class="text-center text-muted">
+                  This is the address where the funds will be sent from
+                </div>
+              </div>
+              <div class="row">
                 <div v-bind:class="{ 'invite-code-input-red': !isValid, 'invite-code-input-green': isValid }">
-                  <input class="form-control span6" placeholder="Enter your address" v-model="address" />
+                  <input class="form-control span6" placeholder="Enter your BTC or ETH address" v-model="address" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="checkbox">
+                  <label><input type="checkbox"  v-model="checked">I certify that I am not a citizen or resident of the United States of America, The Republic of Singapore or The People's Republic of China</label>
                 </div>
               </div>
             </slot>
@@ -31,7 +40,11 @@
               <button class="btn btn-success btn-lg btn-block" @click="submit" :disabled="isFormNotValid">Submit Address</button>
             </slot>
           </div>
-
+           <div class="row">
+              <div class="text-center">
+                This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel
+              </div>
+            </div>
         </div>
       </div>
       <div class="bottom-logo">
@@ -57,7 +70,6 @@ export default {
       address: null,
       checked: null,
       errorResponse: null,
-      showModal: null
     }
   },
   methods: {
@@ -114,7 +126,7 @@ export default {
       return !isEmpty(this.address) && this.address.length >= 10;
     },
     isFormNotValid () {
-      return !this.isValid
+      return !(this.isValid && this.checked)
     },
     apolloClient: function() {
       return this.$apollo.provider.defaultClient;
