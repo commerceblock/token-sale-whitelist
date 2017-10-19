@@ -98,10 +98,15 @@ export default {
   props: ['address'],
   methods: {
   },
-  computed: {
-    status () {
-      return this.listAddress && this.listAddress.status;
+  data () {
+    return {
+      status: 'unknown'
     }
+  },
+  computed: {
+    // status () {
+    //   return this.listAddress && this.listAddress.status;
+    // }
   },
   apollo: {
     listAddress: {
