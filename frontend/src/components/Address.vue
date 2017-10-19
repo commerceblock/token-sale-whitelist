@@ -2,29 +2,81 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
+        <div class="top-logo">
+          <img src="/static/assets/cb-logo-green.png" />
+        </div>
+        <div class="tab-title">
+          Welcome to CommerceBlock Whitelist Application
+        </div>
         <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header">
-              <span class="tab-title">Address {{ address }}</span>
-            </slot>
-          </div>
           <div class="modal-body">
             <slot name="body">
-              <div class="row">
-                <div class="login-description text-center">
-                  Address Status
+              <div v-if="status==='pending'">
+                <div class="row">
+                  <div class="status-logo">
+                    <img src="/static/assets/status-pending.svg" />
+                  </div>
+                </div>
+                <div class="row text-center">
+                  Thank you for providing the address for whitelisting
+                </div>
+                <div class="row text-center">
+                  This service may take up a few hours to complete.
+                </div>
+                <div class="row text-center">
+                  Please return at a later date to check the status of the whitelisting.
+                </div>
+                <div class="row text-center">
+                  You can contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or ask on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel if you have any issues.
                 </div>
               </div>
-              <div class="row">
-                  <input class="form-control span6" placeholder="Loading..." v-model="status" readonly/>
+              <div v-if="status==='accepted'">
+                <div class="row">
+                  <div class="status-logo">
+                    <img src="/static/assets/status-accepted.svg" />
+                  </div>
+                </div>
+                <div class="row text-center">
+                  Congratulations!
+                </div>
+                <div class="row text-center">
+                  Your address has been approved
+                </div>
+                <div class="row text-center">
+                  Your default limit is 10,000 EUR, if you want to raise this please contact us on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel.
+                </div>
+              </div>
+              <div v-if="status==='rejected'">
+                <div class="row">
+                  <div class="status-logo">
+                    <img src="/static/assets/status-rejected.svg" />
+                  </div>
+                </div>
+                <div class="row text-center">
+                  We Apologize!
+                </div>
+                <div class="row text-center">
+                  The address provided has been rejected
+                </div>
+                <div class="row text-center">
+                  Click <router-link to="/">here</router-link> to try another address, or you can contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or ask on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel for support.
+                </div>
+              </div>
+              <div v-if="status==='unknown'">
+                <div class="row">
+                  <div class="status-unknown-logo">
+                    <i class="fa fa-question" aria-hidden="true"></i>
+                  </div>
+                </div>
+                <div class="row text-center">
+                  This address has not been recorded, please make sure to submit the address <router-link to="/">here</router-link>.
+                </div>
+                <div class="row text-center">
+                  You can contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or ask on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel if you have any issues.
+                </div>
               </div>
             </slot>
           </div>
-          <div class="modal-footer">
-            <slot name="footer">
-            </slot>
-          </div>
-
         </div>
       </div>
       <div class="bottom-logo">
@@ -40,7 +92,6 @@ import gql from 'graphql-tag';
 import httpStatus from 'http-status-codes';
 import { isEmpty } from 'lodash';
 import  endpoints from '../lib/endpoints'
-
 
 export default {
   name: 'Address',
@@ -65,11 +116,7 @@ export default {
         return {
           address: this.address,
         };
-      },
-      skip() {
-        return isEmpty(this.address);
-      },
-      pollInterval: 5000,
+      }
     }
   }
 }
@@ -146,32 +193,6 @@ export default {
   transform: scale(1.1);
 }
 
-.loginForm .input-group {
-  padding-bottom: 1em;
-  height: 4em;
-  display: block !important;
-}
-
-.input-group input {
-  height: 4em;
-}
-
-textarea {
-  resize: none;
-}
-
-.invite-code-input-red input:focus {
-  border-color: red;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
-  outline: 0 none;
-}
-
-.invite-code-input-green input:focus {
-  border-color: #258C42;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
-  outline: 0 none;
-}
-
 .tab-title {
   color: #141414;
   font-family: "Open Sans";
@@ -189,51 +210,23 @@ textarea {
   margin: 5px 0 30px 0;
 }
 
-.seed-description {
-  color: #141414;
-  font-family: "Open Sans";
-  font-size: 14px;
-  line-height: 19px;
-  margin: -20px 0 15px 0;
-}
-
-.generate-new {
-  margin-top: 10px;
-}
-
-.generate-new a {
-  color: #258C42;
-}
-
-.modal-body.small {
-  margin: 10px 0;
-}
-
-.seed-box {
-  height: 80px;
-  margin-bottom: 20px;
-  border: 1px solid #979797;
-  padding: 10px;
-}
-
-.seed-item {
-  background-color: #258C42;
-  color: #fff;
-  padding: 3px;
-  border-radius: 2px;
-  text-align: center;
-  margin-bottom: 20px;
-  cursor: pointer;
-}
-
-.hidden-item {
-  visibility: hidden;
-}
-
 .bottom-logo {
   position: absolute;
   z-index: -1;
   bottom: 0;
   right: 0;
+}
+
+.top-logo {
+  text-align: center;
+}
+
+.status-logo {
+  text-align: center;
+}
+
+.status-unknown-logo {
+  text-align: center;
+  font-size: 111px;
 }
 </style>

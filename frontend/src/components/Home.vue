@@ -2,12 +2,16 @@
   <transition name="modal">
     <div class="modal-mask">
       <div class="modal-wrapper">
+        <div class="top-logo">
+          <img src="/static/assets/cb-logo-green.png" />
+        </div>
+        <div class="tab-title">
+          Welcome to CommerceBlock Whitelist Application
+        </div>
         <div class="modal-container">
-          <div class="modal-header">
-            <slot name="header">
-              <span class="tab-title">Welcome to CommerceBlock Whitelist Service</span>
-            </slot>
-          </div>
+          <!-- <div class="modal-header">
+
+          </div> -->
           <div class="modal-body">
             <slot name="body">
               <div v-if=errorResponse class="alert alert-danger" role="alert">
@@ -15,7 +19,7 @@
               </div>
               <div class="row">
                 <div class="login-description text-center">
-                  Please enter in your bitcoin or ethereum address
+                  Please enter in your Bitcoin or Ethereum Address
                 </div>
               </div>
               <div class="row">
@@ -40,11 +44,11 @@
               <button class="btn btn-success btn-lg btn-block" @click="submit" :disabled="isFormNotValid">Submit Address</button>
             </slot>
           </div>
-           <div class="row">
-              <div class="text-center">
-                This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel
-              </div>
-            </div>
+        </div>
+        <div class="row">
+          <div class="text-center">
+            This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel
+          </div>
         </div>
       </div>
       <div class="bottom-logo">
@@ -65,7 +69,7 @@ import  endpoints from '../lib/endpoints'
 export default {
   name: 'Home',
   props: ['refId'],
-  data: function() {
+  data () {
     return {
       address: null,
       checked: null,
@@ -291,6 +295,10 @@ textarea {
 
 .hidden-item {
   visibility: hidden;
+}
+
+.top-logo {
+  text-align: center;
 }
 
 .bottom-logo {
