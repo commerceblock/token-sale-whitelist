@@ -54,3 +54,8 @@ export function parseEvent(event) {
   });
   return filter(events, isEventPredicate);
 };
+
+export function parseRecords(event) {
+  // TODO
+  return [];
+}

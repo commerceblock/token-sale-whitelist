@@ -126,3 +126,9 @@ resources:
           WriteCapacityUnits: ${self:custom.dynamodbThroughput.events.write}
         StreamSpecification:
           StreamViewType: NEW_IMAGE
+    KinesisStream:
+      Type: AWS::Kinesis::Stream
+      Properties:
+        Name: ${self:provider.environment.CB_ENV_NAME}-events
+        ShardCount: ${self:custom.kinesis.shardCount}
+        RetentionPeriodHours:  ${self:custom.kinesis.retentionPeriodHours}
