@@ -41,7 +41,10 @@
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button class="btn btn-success btn-lg btn-block" @click="submit" :disabled="isFormNotValid">Submit Address</button>
+              <button class="btn btn-success btn-lg btn-block" @click="submit" :disabled="isFormNotValid">
+                <div v-if="idle">Submit Address</div>
+                <div v-if="!idle">spinner</div>
+              </button>
             </slot>
           </div>
         </div>
@@ -74,6 +77,7 @@ export default {
       address: null,
       checked: null,
       errorResponse: null,
+      idle: true,
     }
   },
   methods: {
@@ -88,16 +92,22 @@ export default {
       } else {
         this.errorResponse = null;
         const that = this;
+        // spinner
+        that.idle = false;
         this.doCheck()
           .then(this.handleCheckResult)
           .catch(this.handleGenericError)
       }
     },
     handleCheckResult (response) {
+      // disable spinner
+      this.idle = true;
       const address = response.address;
       this.$router.push(`/address/${address}`);
     },
     handleGenericError (error) {
+      // disable spinner
+      this.idle = true;
       console.log(error);
       if(error && error.graphQLErrors && !isEmpty(error.graphQLErrors)) {
         this.errorResponse = error.graphQLErrors[0].message;
