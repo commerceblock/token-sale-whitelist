@@ -1,78 +1,87 @@
 <template>
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="top-logo">
-          <img src="/static/assets/cb-logo-green.png" />
-        </div>
-        <div class="tab-title">
-          Welcome to CommerceBlock Whitelist Application
-        </div>
-        <div class="modal-container">
-          <!-- <div class="modal-header">
+<transition name="modal">
+  <div class="modal-mask">
+    <div class="modal-wrapper">
+      <div class="top-logo">
+        <img src="/static/assets/cb-logo-green.png" />
+      </div>
+      <div class="tab-title">
+        Welcome to CommerceBlock Whitelist Application
+      </div>
+      <div class="modal-container">
+        <!-- <div class="modal-header">
 
           </div> -->
-          <div class="modal-body">
-            <slot name="body">
-              <div v-if=errorResponse class="alert alert-danger" role="alert">
-                <p>{{errorResponse}}</p>
+        <div class="modal-body">
+          <slot name="body">
+            <div v-if=errorResponse class="alert alert-danger" role="alert">
+              <p>{{errorResponse}}</p>
+            </div>
+            <div class="row">
+              <div class="login-description text-center">
+                Please enter in your Bitcoin or Ethereum Address
               </div>
-              <div class="row">
-                <div class="login-description text-center">
-                  Please enter in your Bitcoin or Ethereum Address
-                </div>
+            </div>
+            <div class="row">
+              <div class="text-center text-muted">
+                This is the address where the funds will be sent from
               </div>
-              <div class="row">
-                <div class="text-center text-muted">
-                  This is the address where the funds will be sent from
-                </div>
+            </div>
+            <div class="row">
+              <div v-bind:class="{ 'invite-code-input-red': !isValid, 'invite-code-input-green': isValid }">
+                <input class="form-control span6" placeholder="Enter your BTC or ETH address" v-model="address" />
               </div>
-              <div class="row">
-                <div v-bind:class="{ 'invite-code-input-red': !isValid, 'invite-code-input-green': isValid }">
-                  <input class="form-control span6" placeholder="Enter your BTC or ETH address" v-model="address" />
-                </div>
+            </div>
+            <div class="row">
+              <div class="checkbox">
+                <label><input type="checkbox"  v-model="checked">I certify that I am not a citizen or resident of the United States of America, The Republic of Singapore or The People's Republic of China</label>
               </div>
-              <div class="row">
-                <div class="checkbox">
-                  <label><input type="checkbox"  v-model="checked">I certify that I am not a citizen or resident of the United States of America, The Republic of Singapore or The People's Republic of China</label>
-                </div>
-              </div>
-            </slot>
-          </div>
-          <div class="modal-footer">
-            <slot name="footer">
-              <button class="btn btn-success btn-lg btn-block" @click="submit" :disabled="isFormNotValid">
-                <div v-if="idle">Submit Address</div>
-                <div v-if="!idle">spinner</div>
-              </button>
-            </slot>
-          </div>
+            </div>
+          </slot>
         </div>
-        <div class="row">
-          <div class="text-center">
-            This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel
-          </div>
+        <div class="modal-footer">
+          <slot name="footer">
+            <button class="btn btn-success btn-lg btn-block" @click="submit" :disabled="isFormNotValid">
+                <div v-if="idle">Submit Address</div>
+                <div v-if="!idle">
+                  <div class="spinner">
+                      <div class="bounce1"></div>
+                      <div class="bounce2"></div>
+                      <div class="bounce3"></div>
+                    </div>
+                  </div>
+              </button>
+          </slot>
         </div>
       </div>
-      <div class="bottom-logo">
-        <img src="/static/assets/commcerblock-big-gray.png" />
+      <div class="row">
+        <div class="text-center">
+          This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg"
+            target="_blank">Telegram</a> channel
+        </div>
       </div>
     </div>
-  </transition>
+    <div class="bottom-logo">
+      <img src="/static/assets/commcerblock-big-gray.png" />
+    </div>
+  </div>
+</transition>
 </template>
 
 <script>
 import 'whatwg-fetch';
 import gql from 'graphql-tag';
 import httpStatus from 'http-status-codes';
-import { isEmpty } from 'lodash';
-import  endpoints from '../lib/endpoints'
+import {
+  isEmpty
+} from 'lodash';
+import endpoints from '../lib/endpoints'
 
 
 export default {
   name: 'Home',
   props: ['refId'],
-  data () {
+  data() {
     return {
       address: null,
       checked: null,
@@ -81,7 +90,7 @@ export default {
     }
   },
   methods: {
-    submit () {
+    submit() {
       // TODO:: toggle progress bar
       if (isEmpty(this.address)) {
         // empty phrase
@@ -99,26 +108,26 @@ export default {
           .catch(this.handleGenericError)
       }
     },
-    handleCheckResult (response) {
+    handleCheckResult(response) {
       // disable spinner
       this.idle = true;
       const address = response.address;
       this.$router.push(`/address/${address}`);
     },
-    handleGenericError (error) {
+    handleGenericError(error) {
       // disable spinner
       this.idle = true;
       console.log(error);
-      if(error && error.graphQLErrors && !isEmpty(error.graphQLErrors)) {
+      if (error && error.graphQLErrors && !isEmpty(error.graphQLErrors)) {
         this.errorResponse = error.graphQLErrors[0].message;
       } else {
         this.errorResponse = "Unexpected error occured, please try again.";
       }
     },
-    doCheck () {
+    doCheck() {
       return this.apolloClient
         .mutate({
-          mutation: gql`mutation {
+          mutation: gql `mutation {
                   createAddress(addressInput: {
                     address: "${this.address}"
                     refId: "${this.sanitizedRefId}"
@@ -126,7 +135,8 @@ export default {
                     address
                     status
                   }
-                }`})
+                }`
+        })
         .then(result => result.data.createAddress)
         .catch(err => {
           // TODO: show error
@@ -136,10 +146,10 @@ export default {
     },
   },
   computed: {
-    isValid () {
+    isValid() {
       return !isEmpty(this.address) && this.address.length >= 10;
     },
-    isFormNotValid () {
+    isFormNotValid() {
       return !(this.isValid && this.checked)
     },
     apolloClient: function() {
@@ -200,6 +210,8 @@ export default {
   padding-top: 10px;
   border: none;
 }
+
+
 /*
  * The following styles are auto-applied to elements with
  * transition="modal" when their visibility is toggled
@@ -317,4 +329,47 @@ textarea {
   bottom: 0;
   right: 0;
 }
+
+.spinner {
+  margin: 0 auto 0;
+  width: 70px;
+  text-align: center;
+}
+
+.spinner > div {
+  width: 18px;
+  height: 18px;
+  background-color: #ffffff;
+
+  border-radius: 100%;
+  display: inline-block;
+  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+  animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.spinner .bounce1 {
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.spinner .bounce2 {
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+}
+
+@-webkit-keyframes sk-bouncedelay {
+  0%, 80%, 100% { -webkit-transform: scale(0) }
+  40% { -webkit-transform: scale(1.0) }
+}
+
+@keyframes sk-bouncedelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1.0);
+    transform: scale(1.0);
+  }
+}
+
 </style>
