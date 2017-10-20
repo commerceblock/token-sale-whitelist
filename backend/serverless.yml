@@ -76,13 +76,16 @@ functions:
   backoffice-coinfirm-processor:
     name: ${self:provider.environment.CB_ENV_NAME}-backoffice-coinfirm-processor
     handler: lambda/backoffice-coinfirm-processor.process
-    timeout: 60
+    timeout: 30
     events:
       - stream:
           type: kinesis
-          arn: { Fn::GetAtt: [ KinesisStream, Arn ] }
           batchSize: 100
           startingPosition: TRIM_HORIZON
+          arn:
+            Fn::GetAtt:
+              - KinesisStream
+              - Arn
 
 resources:
   Resources:
