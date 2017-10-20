@@ -97,8 +97,8 @@ export function storeResponse(response) {
   const address = response.address;
   const result = response.result
   const address_type = result.address_type;
-  const recommenation = result.recommenation;
-  const status = recommenation <= 1 ? 'accepted' : 'rejected';
+  const recommendation = result.recommendation;
+  const status = recommendation <= 1 ? 'accepted' : 'rejected';
   const payload = {
     address,
     event_id: createOrderedId(),
@@ -107,6 +107,7 @@ export function storeResponse(response) {
     data: {
       status,
       address_type,
+      recommendation,
     },
   };
   return saveEvent(payload);
