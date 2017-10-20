@@ -18,13 +18,13 @@
               <p>{{errorResponse}}</p>
             </div>
             <div class="row">
-              <div class="login-description text-center">
-                Please enter in your Bitcoin or Ethereum Address
+              <div class="text-center">
+                <h3>Please enter in your Bitcoin or Ethereum Address</h3>
               </div>
             </div>
             <div class="row">
               <div class="text-center text-muted">
-                This is the address where the funds will be sent from
+                <h5>This is the address where the funds will be sent from</h5>
               </div>
             </div>
             <div class="row">
@@ -52,14 +52,20 @@
                   </div>
               </button>
           </slot>
+
+          <div class="text-center" id="modal-footer-note">
+            This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg"
+              target="_blank">Telegram</a> channel
+          </div>
+
         </div>
       </div>
-      <div class="row">
+      <!-- <div class="row">
         <div class="text-center">
           This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg"
             target="_blank">Telegram</a> channel
         </div>
-      </div>
+      </div> -->
     </div>
     <div class="bottom-logo">
       <img src="/static/assets/commcerblock-big-gray.png" />
@@ -190,6 +196,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  margin-top: 30px;
 }
 
 .modal-header h3 {
@@ -209,6 +216,11 @@ export default {
   padding: 0 !important;
   padding-top: 10px;
   border: none;
+}
+
+#modal-footer-note {
+  position: relative;
+  bottom: -210px;
 }
 
 
@@ -321,6 +333,8 @@ textarea {
 
 .top-logo {
   text-align: center;
+  margin-bottom: 10px;
+
 }
 
 .bottom-logo {

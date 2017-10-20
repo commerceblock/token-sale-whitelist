@@ -14,4 +14,9 @@ export default {
 body {
   background-color: #F9F9F9;
 }
+
+a {
+  color: #258C42;
+  text-decoration: underline;
+}
 </style>

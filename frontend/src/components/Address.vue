@@ -18,18 +18,17 @@
                   </div>
                 </div>
                 <div class="row text-center">
-                  Thank you for providing the address for whitelisting
+                  <h3>Thank you for providing the address for whitelisting</h3>
                 </div>
                 <div class="row text-center">
-                  This service may take up a few hours to complete.
-                </div>
-                <div class="row text-center">
+                  This service may take up a few hours to complete. <br>
                   Please return at a later date to check the status of the whitelisting.
                 </div>
                 <div class="row text-center">
                   You can contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or ask on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel if you have any issues.
                 </div>
               </div>
+
               <div v-if="status==='accepted'">
                 <div class="row">
                   <div class="status-logo">
@@ -37,10 +36,10 @@
                   </div>
                 </div>
                 <div class="row text-center">
-                  Congratulations!
+                  <h1><strong>Congratulations!</strong></h1>
                 </div>
                 <div class="row text-center">
-                  Your address has been approved
+                  <h3>Your address has been approved</h3>
                 </div>
                 <div class="row text-center">
                   Your default limit is 10,000 EUR, if you want to raise this please contact us on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel.
@@ -53,10 +52,10 @@
                   </div>
                 </div>
                 <div class="row text-center">
-                  We Apologize!
+                  <h1><strong>We Apologize!</strong></h1>
                 </div>
                 <div class="row text-center">
-                  The address provided has been rejected
+                  <h3>The address provided has been rejected</h3>
                 </div>
                 <div class="row text-center">
                   Click <router-link to="/">here</router-link> to try another address, or you can contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or ask on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel for support.
@@ -100,7 +99,7 @@ export default {
   },
   data () {
     return {
-      status: 'unknown'
+      status: 'pending'
     }
   },
   computed: {
@@ -155,6 +154,7 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
+  margin-top: 30px;
 }
 
 .modal-header h3 {
@@ -224,6 +224,7 @@ export default {
 
 .top-logo {
   text-align: center;
+  margin-bottom: 10px;
 }
 
 .status-logo {
