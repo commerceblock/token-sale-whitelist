@@ -2,7 +2,7 @@
 import AWS from 'aws-sdk'
 import fetch from 'isomorphic-fetch';
 import httpStatus from 'http-status-codes';
-import { map, isEmpty, filter } from 'lodash'
+import { map, isEmpty, filter, size } from 'lodash'
 
 // local imports
 import { parseRecords } from '../lib/http-util'
@@ -37,7 +37,7 @@ export function process(event, context, callback) {
     log.info('empty batch');
     return callback();
   } else {
-    log.info(`processing ${filteredEvents.length}`)
+    log.info(`processing ${size(filteredEvents)}`)
     Promise.all(map(filteredEvents, createTask))
       .then(result => handleSuccess(result, callback))
       .catch(error => handleError(error, callback));
@@ -55,15 +55,22 @@ export function handleError(error, callback) {
 }
 
 export function createTask(event) {
-  const address = event.address;
-  return fetch(`${api_prefix}/${address}`, {
-      headers: DEFAULT_HEADERS
-    })
-    .then(res => processResponse(address, res))
-    .then(storeResponse)
-    .catch(error => {
-      log.error({ error }, `failed to handle ${address}`);
-    })
+  try {
+    const address = event.address;
+    return fetch(`${api_prefix}/${address}`, {
+        headers: DEFAULT_HEADERS
+      })
+      .then(res => processResponse(address, res))
+      .then(storeResponse)
+      .catch(error => {
+        log.error({ error }, `failed to handle ${address}`);
+      });
+  } catch (error) {
+    log.error({
+      error,
+      event,
+    }, 'an error occured while processing event');
+  }
 }
 
 export function processResponse(address, result) {
@@ -82,7 +89,7 @@ export function processResponse(address, result) {
       status: result.status,
       result
     }, 'got failure');
-    throw new Error(`invlaid response address=${address}`);
+    return Promise.reject(`invlaid response, address=${address}`)
   }
 }
 
