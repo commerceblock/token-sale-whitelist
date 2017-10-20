@@ -1,6 +1,7 @@
 {
   "name": "token-sale-whitelist",
   "version": "0.1.0",
+  "license" : "BSD-4-Clause",
   "scripts": {
     "start": "MOCKED_DATABASE=true env-cmd deployment/environment/security.env.local nodemon ./deployment/devServer --ignore frontend --exec babel-node",
     "start:remote": "MOCKED_DATABASE=false env-cmd deployment/environment/security.env.local nodemon ./deployment/devServer --ignore frontend --exec babel-node",

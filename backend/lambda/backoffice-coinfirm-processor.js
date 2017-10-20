@@ -1,6 +1,7 @@
 // imports
-import 'whatwg-fetch'
 import AWS from 'aws-sdk'
+import fetch from 'isomorphic-fetch';
+import httpStatus from 'http-status-codes';
 import { map, isEmpty, filter } from 'lodash'
 
 // local imports
@@ -36,41 +37,60 @@ export function process(event, context, callback) {
     log.info('empty batch');
     return callback();
   } else {
-    const tasks = Promise.all(map(filteredEvents, createTask));
+    log.info(`processing ${filteredEvents.length}`)
+    Promise.all(map(filteredEvents, createTask))
+      .then(result => handleSuccess(result, callback))
+      .catch(error => handleError(error, callback));
   }
 }
 
-function handleError(error, callback) {
-  log.error({ error }, 'failed to process event, abort batch.');
+export function handleSuccess(result, callback) {
+  log.info('all records were processed successfully');
+  callback();
+}
+
+export function handleError(error, callback) {
+  log.error({ error }, 'failed to process records, abort batch');
   callback('abort batch');
 }
 
-function createTask(event) {
+export function createTask(event) {
   const address = event.address;
   return fetch(`${api_prefix}/${address}`, {
       headers: DEFAULT_HEADERS
     })
-    .then(processResponse)
+    .then(res => processResponse(address, res))
     .then(storeResponse)
+    .catch(error => {
+      log.error({ error }, `failed to handle ${address}`);
+    })
 }
 
-function processResponse(result) {
+export function processResponse(address, result) {
   if (result.status === httpStatus.OK) {
-    return result.json();
+    return result.json()
+      .then(data => {
+        log.info({ address, data }, 'got success');
+        return {
+          address,
+          result: data
+        }
+      });
   } else {
     log.error({
       address,
       status: result.status,
       result
     }, 'got failure');
-    return null;
+    throw new Error(`invlaid response address=${address}`);
   }
 }
 
-function storeResponse(data) {
-  log.info({ data }, 'store result');
-  const address_type = data.address_type;
-  const recommenation = data.recommenation;
+export function storeResponse(response) {
+  const address = response.address;
+  const result = response.result
+  const address_type = result.address_type;
+  const recommenation = result.recommenation;
   const status = recommenation <= 1 ? 'accepted' : 'rejected';
   const payload = {
     address,

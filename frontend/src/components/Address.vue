@@ -86,7 +86,6 @@
 </template>
 
 <script>
-import 'whatwg-fetch';
 import gql from 'graphql-tag';
 import httpStatus from 'http-status-codes';
 import { isEmpty } from 'lodash';
@@ -95,17 +94,10 @@ import  endpoints from '../lib/endpoints'
 export default {
   name: 'Address',
   props: ['address'],
-  methods: {
-  },
-  data () {
-    return {
-      status: 'pending'
-    }
-  },
   computed: {
-    // status () {
-    //   return this.listAddress && this.listAddress.status;
-    // }
+    status () {
+      return this.listAddress && this.listAddress.status;
+    }
   },
   apollo: {
     listAddress: {

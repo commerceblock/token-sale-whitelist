@@ -75,7 +75,6 @@
 </template>
 
 <script>
-import 'whatwg-fetch';
 import gql from 'graphql-tag';
 import httpStatus from 'http-status-codes';
 import {
@@ -162,7 +161,7 @@ export default {
       return this.$apollo.provider.defaultClient;
     },
     sanitizedRefId: function() {
-      return !isEmpty(this.refId) && this.refId.substring(0, 50);
+      return (!isEmpty(this.refId) && this.refId.substring(0, 50)) || null;
     }
   },
 }
