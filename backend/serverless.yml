@@ -1,4 +1,4 @@
-service: cb-address-checker
+service: token-sale-whitelist
 
 frameworkVersion: ">=1.1.0 <2.0.0"
 
@@ -8,35 +8,33 @@ plugins:
 
 provider:
   name: aws
-  stage: prod008
+  stage: stag008
   region: us-east-1
   runtime: nodejs6.10
   memorySize: 256
   timeout: 5
   versionFunctions: true
-  environment:  ${self:custom.externalEnv.environment}
+  environment:  ${self:custom.externalConfig.environment}
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - ec2:CreateNetworkInterface
-        - ec2:DescribeNetworkInterfaces
-        - ec2:DetachNetworkInterface
-        - ec2:DeleteNetworkInterface
-      Resource: "*"
+        - kinesis:PutRecords
+      Resource: "arn:aws:kinesis:${self:provider.region}:*:stream/${self:custom.stage}-${self:service}-*"
     - Effect: Allow
       Action:
         - dynamodb:Query
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
-      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:service}-${self:custom.stage}-*"
+      Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.stage}-${self:service}-*"
 
 custom:
   stage: ${opt:stage, self:provider.stage}
-  externalEnv: ${file(env.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
-  cors: ${self:custom.externalEnv.cors}
-  dynamodbThroughput: ${self:custom.externalEnv.dynamodbThroughput}
-  vpc: ${self:custom.externalEnv.vpc}
+  externalConfig: ${file(env.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
+  cors: ${self:custom.externalConfig.cors}
+  dynamodbThroughput: ${self:custom.externalConfig.dynamodbThroughput}
+  vpc: ${self:custom.externalConfig.vpc}
+  kinesis: ${self:custom.externalConfig.kinesis}
   dynamodb:
     start:
       port: 8000
@@ -54,6 +52,7 @@ custom:
 functions:
 
   graphql-api:
+    name: ${self:provider.environment.CB_ENV_NAME}-graphql-api
     handler: lambda/graphql-api.post
     events:
     - http:
@@ -62,8 +61,9 @@ functions:
         cors: true
 
   ### Backoffice functions
-  backoffice-stream-processor:
-    handler: lambda/backoffice-stream-processor.process
+  backoffice-kinesis-processor:
+    name: ${self:provider.environment.CB_ENV_NAME}-backoffice-kinesis-processor
+    handler: lambda/backoffice-kinesis-processor.process
     timeout: 30
     events:
       - stream:
@@ -72,14 +72,24 @@ functions:
             Fn::GetAtt:
               - EventsDynamoDbTable
               - StreamArn
-    vpc: ${self:custom.vpc}
+
+  backoffice-coinfirm-processor:
+    name: ${self:provider.environment.CB_ENV_NAME}-backoffice-coinfirm-processor
+    handler: lambda/backoffice-coinfirm-processor.process
+    timeout: 60
+    events:
+      - stream:
+          type: kinesis
+          arn: { Fn::GetAtt: [ KinesisStream, Arn ] }
+          batchSize: 100
+          startingPosition: TRIM_HORIZON
 
 resources:
   Resources:
     WebsiteS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:provider.environment.CB_ENV_NAME}-website
+        BucketName: cb-${self:provider.environment.CB_ENV_NAME}-website
         AccessControl: PublicRead
         WebsiteConfiguration:
           IndexDocument: index.html

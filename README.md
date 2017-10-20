@@ -1,4 +1,4 @@
-## CommerceBlock Address Checker Application ##
+## CommerceBlock Token Sale Whitelist Service ##
 
 > We come nearest to the great when we are great in humility.
 >

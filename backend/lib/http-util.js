@@ -5,7 +5,7 @@ import { map, filter } from 'lodash';
 
 // local imports
 import { isEventPredicate } from '../lib/item-util';
-import { columns } from '../model/consts';
+import { columns, base64_encoding, utf_8_encoding } from '../model/consts';
 
 // logging
 import { createLogger } from 'bunyan';
@@ -48,7 +48,7 @@ export function parseEvent(event) {
       log.error({
         record,
         err,
-      }, 'Failed to prase record');
+      }, 'Failed to prase dynamodb event');
       return {};
     }
   });
@@ -56,6 +56,20 @@ export function parseEvent(event) {
 };
 
 export function parseRecords(event) {
-  // TODO
-  return [];
+  const records = event.Records ? event.Records : [];
+  const events = map(records, record => {
+    try {
+      const encoded = record.kinesis.data;
+      const decodedBuffer = Buffer.from(encoded, base64_encoding);
+      const decodedData = decodedBuffer.toString(utf_8_encoding);
+      return JSON.parse(decodedData);
+    } catch (err) {
+      log.error({
+        record,
+        err,
+      }, 'Failed to prase kinesis event');
+      return {};
+    }
+  });
+  return filter(events, isEventPredicate);
 }

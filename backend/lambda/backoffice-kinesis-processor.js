@@ -31,7 +31,7 @@ export function process(event, context, callback) {
     log.info(`pushing ${records.length}`)
     const putRequest = buildPutRequest(records)
     kinesis
-      .putRecords(params)
+      .putRecords(putRequest)
       .promise()
       .then(result => handleSuccess(result, callback))
       .catch(error => handleError(error, callback));
@@ -54,7 +54,7 @@ function handleError(error, callback) {
   callback('abort batch');
 }
 
-function handlePutRequest(records) {
+function buildPutRequest(records) {
   return {
     Records: records,
     StreamName: stream_name,
