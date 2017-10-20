@@ -21,7 +21,7 @@
                   <h3>Thank you for providing the address for whitelisting</h3>
                 </div>
                 <div class="row text-center">
-                  This service may take up a few hours to complete. <br>
+                  This service may take a few hours to complete. <br>
                   Please return at a later date to check the status of the whitelisting.
                 </div>
                 <div class="row text-center">
