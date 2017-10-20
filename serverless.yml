@@ -3,6 +3,7 @@ service: token-sale-whitelist
 frameworkVersion: ">=1.1.0 <2.0.0"
 
 plugins:
+  - serverless-single-page-app-plugin
   - serverless-dynamodb-local
   - serverless-offline
 
@@ -31,6 +32,9 @@ provider:
 custom:
   stage: ${opt:stage, self:provider.stage}
   externalConfig: ${file(env.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
+  s3Bucket: cb-${self:provider.environment.CB_ENV_NAME}-website
+  localWebsiteDestination: build/frontend/
+  remoteWebsiteDestination: s3://${self:custom.s3Bucket}/
   cors: ${self:custom.externalConfig.cors}
   dynamodbThroughput: ${self:custom.externalConfig.dynamodbThroughput}
   vpc: ${self:custom.externalConfig.vpc}
@@ -92,7 +96,7 @@ resources:
     WebsiteS3Bucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: cb-${self:provider.environment.CB_ENV_NAME}-website
+        BucketName: ${self:custom.s3Bucket}
         AccessControl: PublicRead
         WebsiteConfiguration:
           IndexDocument: index.html
@@ -145,3 +149,43 @@ resources:
         Name: ${self:provider.environment.CB_ENV_NAME}-events
         ShardCount: ${self:custom.kinesis.shardCount}
         RetentionPeriodHours:  ${self:custom.kinesis.retentionPeriodHours}
+    WebAppCloudFrontDistribution:
+      Type: AWS::CloudFront::Distribution
+      Properties:
+        DistributionConfig:
+          Origins:
+            - DomainName: ${self:custom.s3Bucket}.s3.amazonaws.com
+              ## An identifier for the origin which must be unique within the distribution
+              Id: WebApp
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: https-only
+          Enabled: 'true'
+          DefaultRootObject: index.html
+          CustomErrorResponses:
+            - ErrorCode: 404
+              ResponseCode: 200
+              ResponsePagePath: /index.html
+          DefaultCacheBehavior:
+            AllowedMethods:
+              - DELETE
+              - GET
+              - HEAD
+              - OPTIONS
+              - PATCH
+              - POST
+              - PUT
+            TargetOriginId: WebApp
+            ForwardedValues:
+              QueryString: 'false'
+              Cookies:
+                Forward: none
+            ViewerProtocolPolicy: redirect-to-https
+          ViewerCertificate:
+            CloudFrontDefaultCertificate: 'true'
+
+  Outputs:
+    WebAppCloudFrontDistributionOutput:
+      Value:
+        'Fn::GetAtt': [ WebAppCloudFrontDistribution, DomainName ]

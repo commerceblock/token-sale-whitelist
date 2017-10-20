@@ -6521,6 +6521,10 @@ serverless-offline@^3.15.3:
     lodash "^4.17.4"
     velocityjs "^0.9.3"
 
+"serverless-single-page-app-plugin@git://github.com/commerceblock/serverless-single-page-app-plugin.git#5140a247b4eb7a292720243190d341e372eb9c7c":
+  version "1.0.0"
+  resolved "git://github.com/commerceblock/serverless-single-page-app-plugin.git#5140a247b4eb7a292720243190d341e372eb9c7c"
+
 serverless-sqs-local@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/serverless-sqs-local/-/serverless-sqs-local-1.1.2.tgz#2ac825d8b8e34bb57244d1fbc8cb0fab73ffd442"
