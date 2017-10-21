@@ -3,19 +3,25 @@ service: token-sale-whitelist
 frameworkVersion: ">=1.1.0 <2.0.0"
 
 plugins:
+  - serverless-kms-secrets
   - serverless-single-page-app-plugin
   - serverless-dynamodb-local
   - serverless-offline
 
 provider:
   name: aws
-  stage: prod018
+  stage: prod019
   region: us-east-1
   runtime: nodejs6.10
   memorySize: 256
   timeout: 5
   versionFunctions: true
-  environment:  ${self:custom.externalConfig.environment}
+  environment:
+    CB_ENV_NAME: ${self:custom.stage}-${self:service}
+    CB_COINFIRM_API: ${self:custom.externalConfig.configuration.coinfirmAPI}
+    # secrets
+    CB_ENC_COINFIRM_API_TOKEN: ${self:custom.kmsSecrets.secrets.CB_ENC_COINFIRM_API_TOKEN}
+
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -28,10 +34,15 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
       Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:custom.stage}-${self:service}-*"
+    - Effect: Allow
+      Action:
+        - KMS:Decrypt
+      Resource: ${self:custom.kmsSecrets.keyArn}
 
 custom:
   stage: ${opt:stage, self:provider.stage}
   externalConfig: ${file(env.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
+  kmsSecrets: ${file(kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
   s3Bucket: cb-${self:provider.environment.CB_ENV_NAME}-website
   localWebsiteDestination: build/frontend/
   remoteWebsiteDestination: s3://${self:custom.s3Bucket}/

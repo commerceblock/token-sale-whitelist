@@ -328,7 +328,22 @@ autoprefixer@^7.1.2:
     postcss "^6.0.13"
     postcss-value-parser "^3.2.3"
 
-aws-sdk@^2.7.0, aws-sdk@^2.72.0, aws-sdk@^2.80.0, aws-sdk@^2.85.0, aws-sdk@^2.98.0:
+aws-sdk@^2.138.0:
+  version "2.138.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.138.0.tgz#acb923132b51fafe8a464aa757f65d61ac30bd77"
+  dependencies:
+    buffer "4.9.1"
+    crypto-browserify "1.0.9"
+    events "^1.1.1"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.1.0"
+    xml2js "0.4.17"
+    xmlbuilder "4.2.1"
+
+aws-sdk@^2.7.0, aws-sdk@^2.72.0, aws-sdk@^2.80.0, aws-sdk@^2.85.0:
   version "2.137.0"
   resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.137.0.tgz#2abbdc2b8642afd0786a17635d9488cc87791171"
   dependencies:
