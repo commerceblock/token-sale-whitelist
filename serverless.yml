@@ -9,7 +9,7 @@ plugins:
 
 provider:
   name: aws
-  stage: stag008
+  stage: prod018
   region: us-east-1
   runtime: nodejs6.10
   memorySize: 256
@@ -37,7 +37,6 @@ custom:
   remoteWebsiteDestination: s3://${self:custom.s3Bucket}/
   cors: ${self:custom.externalConfig.cors}
   dynamodbThroughput: ${self:custom.externalConfig.dynamodbThroughput}
-  vpc: ${self:custom.externalConfig.vpc}
   kinesis: ${self:custom.externalConfig.kinesis}
   dynamodb:
     start:
@@ -169,13 +168,9 @@ resources:
               ResponsePagePath: /index.html
           DefaultCacheBehavior:
             AllowedMethods:
-              - DELETE
-              - GET
               - HEAD
+              - GET
               - OPTIONS
-              - PATCH
-              - POST
-              - PUT
             TargetOriginId: WebApp
             ForwardedValues:
               QueryString: 'false'

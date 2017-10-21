@@ -1,5 +1,3 @@
-/* @flow */
-
 import {
   GraphQLInputObjectType,
   GraphQLString,

@@ -1,4 +1,3 @@
-
 // imports
 import dynamoose from 'dynamoose';
 

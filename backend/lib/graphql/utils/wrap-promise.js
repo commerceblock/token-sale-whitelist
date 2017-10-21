@@ -1,5 +1,3 @@
-/* @flow */
-
 import { mapValues } from 'lodash';
 
 export default (db) => (

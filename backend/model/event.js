@@ -1,10 +1,9 @@
-
 // imports
-import { Schema } from 'dynamoose'
+import { Schema } from 'dynamoose';
 
 // local imports
-import dynamoose from '../lib/dynamoose'
-import { columns } from './consts'
+import dynamoose from '../lib/dynamoose';
+import { columns } from './consts';
 
 // schema defintion
 const EventSchema = new Schema({

@@ -113,10 +113,9 @@ export default {
           .catch(this.handleGenericError)
       }
     },
-    handleCheckResult(response) {
+    handleCheckResult(address) {
       // disable spinner
       this.idle = true;
-      const address = response.address;
       this.$router.push(`/address/${address}`);
     },
     handleGenericError(error) {
@@ -136,10 +135,7 @@ export default {
                   createAddress(addressInput: {
                     address: "${this.address}"
                     refId: "${this.sanitizedRefId}"
-                  }) {
-                    address
-                    status
-                  }
+                  })
                 }`
         })
         .then(result => result.data.createAddress)

@@ -2,16 +2,16 @@
 
 import {
   GraphQLObjectType,
+  GraphQLString,
 } from 'graphql';
-import AddressType from '../types/address';
-import AddressInputType from '../types/address-input';
+import AddressInputType from './address-input';
 import db from '../database';
 
 const MutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
     createAddress: {
-      type: AddressType,
+      type: GraphQLString,
       description: 'Create a new address',
       args: {
         addressInput: { type: AddressInputType },

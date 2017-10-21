@@ -1,4 +1,3 @@
-
 // imports
 import uuid from 'uuid';
 
