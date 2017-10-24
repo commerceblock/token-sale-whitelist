@@ -8,10 +8,35 @@ plugins:
   - serverless-dynamodb-local
   - serverless-offline
 
+custom:
+  defaultStage: sand
+  accounts:
+    prod:
+      stage: prod020
+      domainName: whitelist.commerceblock.com
+    sand:
+      stage: sand020
+      domainName: whitelist.commerceblock.ninja
+  selectedStage: ${env:CB_ENV, self:custom.defaultStage}
+  stage: ${self:custom.accounts.${self:custom.selectedStage}.stage}
+  externalConfig: ${file(env.${self:custom.stage}.${opt:region, self:provider.region}.yml)}
+  kmsSecrets: ${file(kms-secrets.${self:custom.stage}.${opt:region, self:provider.region}.yml)}
+  cors: ${self:custom.externalConfig.cors}
+  dynamodbThroughput: ${self:custom.externalConfig.dynamodbThroughput}
+  kinesis: ${self:custom.externalConfig.kinesis}
+  s3Bucket: cb-${self:provider.environment.CB_ENV_NAME}-website
+  localWebsiteDestination: build/frontend/
+  remoteWebsiteDestination: s3://${self:custom.s3Bucket}/
+  domainName: ${self:custom.accounts.${self:custom.selectedStage}.domainName}
+  # dev env
+  dynamodb: ${self:custom.externalConfig.dynamodb}
+  serverless-offline: ${self:custom.externalConfig.serverless-offline}
+
+
 provider:
   name: aws
-  stage: prod019
-  region: us-east-1
+  stage: ${self:custom.stage}
+  region: eu-west-1
   runtime: nodejs6.10
   memorySize: 256
   timeout: 5
@@ -38,30 +63,6 @@ provider:
       Action:
         - KMS:Decrypt
       Resource: ${self:custom.kmsSecrets.keyArn}
-
-custom:
-  stage: ${opt:stage, self:provider.stage}
-  externalConfig: ${file(env.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
-  kmsSecrets: ${file(kms-secrets.${opt:stage, self:provider.stage}.${opt:region, self:provider.region}.yml)}
-  s3Bucket: cb-${self:provider.environment.CB_ENV_NAME}-website
-  localWebsiteDestination: build/frontend/
-  remoteWebsiteDestination: s3://${self:custom.s3Bucket}/
-  cors: ${self:custom.externalConfig.cors}
-  dynamodbThroughput: ${self:custom.externalConfig.dynamodbThroughput}
-  kinesis: ${self:custom.externalConfig.kinesis}
-  dynamodb:
-    start:
-      port: 8000
-      inMemory: true
-      migrate: true
-      seed: true
-    seed:
-      domain:
-        sources:
-          - table: ${self:provider.environment.CB_ENV_NAME}-events
-            sources: [./data/events.json]
-  serverless-offline:
-    port: 9000
 
 functions:
 
@@ -163,8 +164,10 @@ resources:
       Type: AWS::CloudFront::Distribution
       Properties:
         DistributionConfig:
+          Aliases:
+            - ${self:custom.domainName}
           Origins:
-            - DomainName: ${self:custom.s3Bucket}.s3.amazonaws.com
+            - DomainName: ${self:custom.s3Bucket}.s3-website-${self:provider.region}.amazonaws.com
               ## An identifier for the origin which must be unique within the distribution
               Id: WebApp
               CustomOriginConfig:
@@ -189,7 +192,8 @@ resources:
                 Forward: none
             ViewerProtocolPolicy: redirect-to-https
           ViewerCertificate:
-            CloudFrontDefaultCertificate: 'true'
+            AcmCertificateArn: ${self:custom.kmsSecrets.certificateArn}
+            SslSupportMethod: sni-only
 
   Outputs:
     WebAppCloudFrontDistributionOutput:
