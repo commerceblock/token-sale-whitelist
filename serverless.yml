@@ -12,7 +12,7 @@ custom:
   defaultStage: sand
   accounts:
     prod:
-      stage: prod020
+      stage: prod021
       domainName: whitelist.commerceblock.com
     sand:
       stage: sand020
