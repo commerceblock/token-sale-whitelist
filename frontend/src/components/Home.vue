@@ -34,7 +34,7 @@
             </div>
             <div class="row">
               <!-- <div class="text-center text-muted"> -->
-                <h5>Please enter your expected contribution amount in USD</h5>
+                <h5>Please enter your expected contribution amount in USD (min 300)</h5>
               <!-- </div> -->
             </div>
             <div class="row">
@@ -47,6 +47,11 @@
             <div class="row">
               <div class="checkbox">
                 <label><input type="checkbox"  v-model="checked">I certify that I am not a citizen or resident of the United States of America, The Republic of Singapore or The People's Republic of China</label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="checkbox" v-bind:class="{ 'kyc-input-hidden': !isKYCRequired }">
+                <label><input type="checkbox" v-model="kycChecked">I confirm that KYC documentation must be submitted for contributions of more than 11.5k USD and failure to submit may result in a refund</label>
               </div>
             </div>
           </slot>
@@ -107,8 +112,8 @@ export default {
       address: null,
       checked: null,
       amount: null,
-      amountInt: null,
       errorResponse: null,
+      kycChecked: null,
       idle: true,
     }
   },
@@ -120,7 +125,7 @@ export default {
         this.errorResponse = 'Address is not valid, please enter a valid BTC or ETH address';
       } else if (!this.isAmountValid) {
         // check phrase
-        this.errorResponse = `Amount is not valid, please enter an amount between $${minAmount.toFixed(2)} - $${maxAmount.toFixed(2)}`;
+        this.errorResponse = `Amount is not valid, please enter an amount greater than $${minAmount.toFixed(2)}`;
       } else if(!this.checked) {
         this.errorResponse = `You must accept terms in order to proceed`;
       } else {
@@ -143,9 +148,10 @@ export default {
       this.idle = true;
       console.log(error);
       if (error && error.graphQLErrors && !isEmpty(error.graphQLErrors)) {
-        this.errorResponse = error.graphQLErrors[0].message;
+        // this.errorResponse = error.graphQLErrors[0].message;
+        this.errorResponse = 'Address is not valid, please enter a valid BTC or ETH address'
       } else {
-        this.errorResponse = "Unexpected error occured, please try again.";
+        this.errorResponse = 'Unexpected error occured, please try again.';
       }
     },
     doCheck() {
@@ -169,31 +175,38 @@ export default {
     },
   },
   computed: {
+    amountInt() {
+      try {
+        const allowedAmount = amountPattern.test(this.amount);
+        if (allowedAmount) {
+          return Number(this.amount);
+        }
+      } catch (err) {
+      }
+      return null;
+    },
     isAddressValid() {
       return !isEmpty(this.address) && this.address.length >= 34 && this.address.length <= 50;
     },
     isAmountValid() {
       try {
-        console.log(this.amount)
-        const allowedAmount = amountPattern.test(this.amount);
-        console.log(allowedAmount)
-        const amountInt = Number(this.amount);
-        console.log(amountInt)
-        const result = allowedAmount && amountInt >= minAmount && amountInt <= maxAmount;
-        console.log(`result=${result}`)
-        return result;
+        const amountInt = this.amountInt
+        return amountInt && amountInt >= minAmount;
       } catch (err) {
         console.log(err)
       }
     },
     isFormNotValid() {
-      return !this.isAddressValid || !this.isAmountValid || !this.checked;
+      return !this.isAddressValid || !this.isAmountValid || !this.checked || (this.isKYCRequired && !this.kycChecked);
     },
-    apolloClient: function() {
+    apolloClient () {
       return this.$apollo.provider.defaultClient;
     },
-    sanitizedRefId: function() {
+    sanitizedRefId () {
       return (!isEmpty(this.refId) && this.refId.substring(0, 50)) || null;
+    },
+    isKYCRequired() {
+      return this.isAmountValid && this.amountInt && this.amountInt >= maxAmount;
     }
   },
 }
@@ -258,7 +271,7 @@ export default {
 
 #modal-footer-note {
   position: relative;
-  bottom: -150px;
+  bottom: -80px;
 }
 
 
@@ -360,6 +373,10 @@ textarea {
   display: inline-block;
   -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;
   animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+}
+
+.kyc-input-hidden {
+  visibility: hidden;
 }
 
 .spinner .bounce1 {

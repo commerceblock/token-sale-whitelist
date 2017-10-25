@@ -26,8 +26,8 @@ export default async (addressInput) => {
   checkEthOrBtcAddress(address);
 
   const amount = addressInput.amount;
-  if (amount < minAmount || amount > maxAmount) {
-    throw new Error(`Amount is not valid, please enter an amount between $${minAmount.toFixed(2)} - $${maxAmount.toFixed(2)}`);
+  if (amount < minAmount) {
+    throw new Error(`Amount is not valid, please enter an amount greater than $${minAmount.toFixed(2)}`);
   }
 
   return loadEvents(address)
