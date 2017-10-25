@@ -70,9 +70,8 @@
               </button>
           </slot>
 
-          <div class="text-center" id="modal-footer-note">
-            This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg"
-              target="_blank">Telegram</a> channel
+          <div class="text-center text-muted" id="modal-footer-note">
+            This is a check for AML compliance. If your sending address is rejected please contact us via our Telegram channel. For contributions of more than 11.5k USD please register for KYC once your address has been confirmed as verified
           </div>
 
         </div>
