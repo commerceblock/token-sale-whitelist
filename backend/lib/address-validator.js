@@ -32,7 +32,8 @@ export function isEtherAddress(address) {
     // If it's all small caps or all all caps, return true
     return true;
   }
-  return isChecksumAddress(address);
+  return true;
+  // return isChecksumAddress(address);
 }
 
 // this function combines the btc check with the ethereum check
