@@ -2,6 +2,7 @@ import {
   GraphQLInputObjectType,
   GraphQLString,
   GraphQLNonNull,
+  GraphQLFloat
 } from 'graphql';
 
 const AddressInputType = new GraphQLInputObjectType({
@@ -11,6 +12,10 @@ const AddressInputType = new GraphQLInputObjectType({
     address: {
       type: new GraphQLNonNull(GraphQLString),
       description: 'address (btc or eth)',
+    },
+    amount: {
+      type: GraphQLFloat,
+      description: 'amount in usd',
     },
     refId: {
       type: GraphQLString,

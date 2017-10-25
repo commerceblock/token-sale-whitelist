@@ -19,17 +19,29 @@
             </div>
             <div class="row">
               <div class="text-center">
-                <h3>Please enter in your Bitcoin or Ethereum Address</h3>
+                <h4>Please fill in your contribution information</h4>
               </div>
             </div>
             <div class="row">
-              <div class="text-center text-muted">
-                <h5>This is the address where the funds will be sent from</h5>
-              </div>
+              <!-- <div class="text-center text-muted"> -->
+                <h5>Please enter in your Bitcoin or Ethereum Address where the funds will be sent from</h5>
+              <!-- </div> -->
             </div>
             <div class="row">
-              <div v-bind:class="{ 'invite-code-input-red': !isValid, 'invite-code-input-green': isValid }">
+              <div v-bind:class="{ 'details-input-red': !isAddressValid, 'details-input-green': isAddressValid }">
                 <input class="form-control span6" placeholder="Enter your BTC or ETH address" v-model="address" />
+              </div>
+            </div>
+            <div class="row">
+              <!-- <div class="text-center text-muted"> -->
+                <h5>Please enter your expected contribution amount in USD</h5>
+              <!-- </div> -->
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <div v-bind:class="{ 'details-input-red': !isAmountValid, 'details-input-green': isAmountValid }">
+                  <input class="form-control span6" placeholder="Enter your contribution amount in USD" v-model="amount" />
+                </div>
               </div>
             </div>
             <div class="row">
@@ -82,6 +94,10 @@ import {
 } from 'lodash';
 import endpoints from '../lib/endpoints'
 
+// consts
+const amountPattern = /^[0-9]+(\.[0-9][0-9])?$/;
+const minAmount = 300;
+const maxAmount = 11500;
 
 export default {
   name: 'Home',
@@ -90,6 +106,8 @@ export default {
     return {
       address: null,
       checked: null,
+      amount: null,
+      amountInt: null,
       errorResponse: null,
       idle: true,
     }
@@ -97,12 +115,14 @@ export default {
   methods: {
     submit() {
       // TODO:: toggle progress bar
-      if (isEmpty(this.address)) {
+      if (!this.isAddressValid) {
         // empty phrase
-        this.errorResponse = 'address is empty.';
-      } else if (!this.isValid) {
+        this.errorResponse = 'Address is not valid, please enter a valid BTC or ETH address';
+      } else if (!this.isAmountValid) {
         // check phrase
-        this.errorResponse = 'address is not valid, must be at least 10 chars.';
+        this.errorResponse = `Amount is not valid, please enter an amount between $${minAmount.toFixed(2)} - $${maxAmount.toFixed(2)}`;
+      } else if(!this.checked) {
+        this.errorResponse = `You must accept terms in order to proceed`;
       } else {
         this.errorResponse = null;
         const that = this;
@@ -129,12 +149,14 @@ export default {
       }
     },
     doCheck() {
+      const amountInt = Number(this.amount)
       return this.apolloClient
         .mutate({
-          mutation: gql `mutation {
+          mutation: gql`mutation {
                   createAddress(addressInput: {
                     address: "${this.address}"
                     refId: "${this.sanitizedRefId}"
+                    amount: ${amountInt}
                   })
                 }`
         })
@@ -147,11 +169,25 @@ export default {
     },
   },
   computed: {
-    isValid() {
-      return !isEmpty(this.address) && this.address.length >= 10;
+    isAddressValid() {
+      return !isEmpty(this.address) && this.address.length >= 30 && this.address.length <= 80;
+    },
+    isAmountValid() {
+      try {
+        console.log(this.amount)
+        const allowedAmount = amountPattern.test(this.amount);
+        console.log(allowedAmount)
+        const amountInt = Number(this.amount);
+        console.log(amountInt)
+        const result = allowedAmount && amountInt >= minAmount && amountInt <= maxAmount;
+        console.log(`result=${result}`)
+        return result;
+      } catch (err) {
+        console.log(err)
+      }
     },
     isFormNotValid() {
-      return !(this.isValid && this.checked)
+      return !this.isAddressValid || !this.isAmountValid || !this.checked;
     },
     apolloClient: function() {
       return this.$apollo.provider.defaultClient;
@@ -177,7 +213,7 @@ export default {
 }
 
 .modal-wrapper {
-  display: table-cell;
+  /* display: table-cell; */
   vertical-align: middle;
 }
 
@@ -215,7 +251,7 @@ export default {
 
 #modal-footer-note {
   position: relative;
-  bottom: -210px;
+  bottom: -150px;
 }
 
 
@@ -256,13 +292,13 @@ textarea {
   resize: none;
 }
 
-.invite-code-input-red input:focus {
+.details-input-red input:focus {
   border-color: red;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
   outline: 0 none;
 }
 
-.invite-code-input-green input:focus {
+.details-input-red input:focus {
   border-color: #258C42;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
   outline: 0 none;
@@ -285,51 +321,14 @@ textarea {
   margin: 5px 0 30px 0;
 }
 
-.seed-description {
-  color: #141414;
-  font-family: "Open Sans";
-  font-size: 14px;
-  line-height: 19px;
-  margin: -20px 0 15px 0;
-}
-
-.generate-new {
-  margin-top: 10px;
-}
-
-.generate-new a {
-  color: #258C42;
-}
-
 .modal-body.small {
   margin: 10px 0;
-}
-
-.seed-box {
-  height: 80px;
-  margin-bottom: 20px;
-  border: 1px solid #979797;
-  padding: 10px;
-}
-
-.seed-item {
-  background-color: #258C42;
-  color: #fff;
-  padding: 3px;
-  border-radius: 2px;
-  text-align: center;
-  margin-bottom: 20px;
-  cursor: pointer;
-}
-
-.hidden-item {
-  visibility: hidden;
 }
 
 .top-logo {
   text-align: center;
   margin-bottom: 10px;
-
+  padding-top: 30px
 }
 
 .bottom-logo {

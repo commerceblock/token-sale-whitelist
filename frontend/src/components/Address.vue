@@ -42,7 +42,7 @@
                   <h3>Your address has been approved</h3>
                 </div>
                 <div class="row text-center">
-                  Your default limit is 10,000 EUR, if you want to raise this please contact us on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel.
+                  Your default limit is 11,500 USD, if you want to raise this please contact us on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel.
                 </div>
               </div>
               <div v-if="status==='rejected'">
