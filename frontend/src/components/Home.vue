@@ -14,7 +14,7 @@
           </div> -->
         <div class="modal-body">
           <slot name="body">
-            <div v-if=errorResponse class="alert alert-danger" role="alert">
+            <div v-if=errorResponse class="alert alert-danger error-message" role="alert">
               <p>{{errorResponse}}</p>
             </div>
             <div class="row">
@@ -200,6 +200,13 @@ export default {
 </script>
 
 <style scoped>
+.error-message {
+  position: absolute;
+  width: 100%;
+  top: -35px;
+  left: 0px;
+}
+
 .modal-mask {
   position: fixed;
   z-index: 9998;
@@ -221,7 +228,7 @@ export default {
   width: 650px;
   height: 500px;
   margin: 0px auto;
-  padding: 20px 30px;
+  padding: 40px 30px;
   background-color: #fff;
   border-radius: 2px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
