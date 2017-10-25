@@ -18,6 +18,9 @@ custom:
     sand:
       stage: sand020
       domainName: whitelist.commerceblock.ninja
+    test:
+      stage: test024
+      domainName: whitelist.test.commerceblock.ninja
   selectedStage: ${env:CB_ENV, self:custom.defaultStage}
   stage: ${self:custom.accounts.${self:custom.selectedStage}.stage}
   externalConfig: ${file(env.${self:custom.stage}.${opt:region, self:provider.region}.yml)}
@@ -44,9 +47,12 @@ provider:
   versionFunctions: true
   environment:
     CB_ENV_NAME: ${self:custom.stage}-${self:service}
-    CB_COINFIRM_API: ${self:custom.externalConfig.configuration.coinfirmAPI}
+    CB_COINFIRM_API: ${self:custom.externalConfig.coinfirm.api}
+    CB_DISABLED_COINFIRM_API: ${self:custom.externalConfig.coinfirm.disabled}
     # secrets
     CB_ENC_COINFIRM_API_TOKEN: ${self:custom.kmsSecrets.secrets.CB_ENC_COINFIRM_API_TOKEN}
+    CB_ENC_STORAGE_ACCESS_KEY: ${self:custom.kmsSecrets.secrets.CB_ENC_COINFIRM_API_TOKEN}
+    CB_ENC_STORAGE_SECRET_KEY: ${self:custom.kmsSecrets.secrets.CB_ENC_COINFIRM_API_TOKEN}
 
   iamRoleStatements:
     - Effect: Allow
@@ -161,6 +167,19 @@ resources:
         Name: ${self:provider.environment.CB_ENV_NAME}-events
         ShardCount: ${self:custom.kinesis.shardCount}
         RetentionPeriodHours:  ${self:custom.kinesis.retentionPeriodHours}
+    StorageBucket:
+      Type: "AWS::S3::Bucket"
+      DeletionPolicy: Retain
+      Properties:
+        BucketName: ${self:provider.environment.CB_ENV_NAME}-storage
+        CorsConfiguration:
+          CorsRules:
+          - AllowedHeaders: ["*"]
+            AllowedMethods: [GET, POST, PUT]
+            AllowedOrigins: ["*"]
+            ExposedHeaders: [Date]
+            Id: FirstRule
+            MaxAge: "3600"
     WebAppCloudFrontDistribution:
       Type: AWS::CloudFront::Distribution
       Properties:

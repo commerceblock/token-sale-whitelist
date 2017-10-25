@@ -1,25 +1,18 @@
 // imports
 import AWS from 'aws-sdk';
-import { createLogger } from 'bunyan';
-
-// local imports
-import { base64_encoding } from '../model/consts';
 
 // logging
+import { createLogger } from 'bunyan';
 const log = createLogger({ name: 'env-util' });
 
 const kms = new AWS.KMS();
 
-export function decrypt(name, encrypted) {
-  return kms.decrypt({ CiphertextBlob: Buffer.from(encrypted, base64_encoding) })
+export function extract(env_name, value) {
+  return kms.decrypt({ CiphertextBlob: Buffer.from(value, 'base64') })
     .promise()
     .then(data => String(data.Plaintext))
     .catch(err => {
-      log.error({
-        name,
-        encrypted,
-        err,
-      }, `FAILED TO DECRYPT ${name}`);
+      log.error({ err }, `FAILED TO DECRYPT ${env_name}`);
       return 'INVALID';
     });
 }

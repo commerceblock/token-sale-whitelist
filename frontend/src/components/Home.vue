@@ -76,12 +76,6 @@
 
         </div>
       </div>
-      <!-- <div class="row">
-        <div class="text-center">
-          This is a check for AML & KYC compliance, if yours sending address is rejected please contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg"
-            target="_blank">Telegram</a> channel
-        </div>
-      </div> -->
     </div>
     <div class="bottom-logo">
       <img src="/static/assets/commcerblock-big-gray.png" />
@@ -140,7 +134,7 @@ export default {
     handleCheckResult(address) {
       // disable spinner
       this.idle = true;
-      this.$router.push(`/address/${address}`);
+      this.$router.push(`/addresses/${address}`);
     },
     handleGenericError(error) {
       // disable spinner

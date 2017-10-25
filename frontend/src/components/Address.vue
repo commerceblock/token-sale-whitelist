@@ -44,7 +44,7 @@
                   <h3>Your address has been approved</h3>
                 </div>
                 <div class="row text-center">
-                  Your default limit is 11,500 USD, if you want to raise this please contact us on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel.
+                  Your current default limit is 11,500 USD. For contributions of more than 11,500 USD please complete the <router-link :to="kycLink">KYC from here</router-link>.
                 </div>
               </div>
               <div v-if="status==='rejected'">
@@ -96,6 +96,11 @@ import  endpoints from '../lib/endpoints'
 export default {
   name: 'Address',
   props: ['address'],
+  data () {
+    return {
+      kycLink: `/addresses/${this.address}/kyc`
+    }
+  },
   computed: {
     status () {
       return this.listAddress && this.listAddress.status;

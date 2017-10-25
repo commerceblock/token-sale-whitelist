@@ -3,6 +3,7 @@ import {
   GraphQLString
 } from 'graphql';
 import AddressType from '../types/address';
+import ApplicationType from '../types/application';
 import db from '../database';
 
 /**
@@ -17,8 +18,15 @@ const QueryType = new GraphQLObjectType({
       args: {
         address: { type: GraphQLString },
       },
-      resolve: (parent, { address }, context) => db.getAddress(address),
-    }
+      resolve: (parent, { address }, context) => db.listAddress(address),
+    },
+    listApplication: {
+      type: ApplicationType,
+      args: {
+        address: { type: GraphQLString },
+      },
+      resolve: (parent, { address }, context) => db.listApplication(address),
+    },
   }),
 });
 

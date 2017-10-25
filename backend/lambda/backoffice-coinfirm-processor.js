@@ -11,6 +11,7 @@ import {
   stream_name,
   event_type,
   coinfirm_api,
+  disabled_coinfirm_api,
 } from '../model/consts';
 import { saveEvent } from '../lib/events-store';
 import { createOrderedId } from '../lib/uuid';
@@ -76,12 +77,30 @@ export function storeResponse(response) {
   return saveEvent(payload);
 }
 
+export function resolveDummyAddressType(address) {
+  return address.startsWith('0x') ? 'tETH' : 'tBTC';
+}
+
+export function fetchResponse(address) {
+  if (disabled_coinfirm_api) {
+    return Promise.resolve({
+      address,
+      result: {
+        address_type: resolveDummyAddressType(address),
+        recommendation: 1,
+      },
+    });
+  }
+  return headersPromise
+    .then(headers => fetch(`${api_prefix}/${address}`, { headers }))
+    .then(res => processResponse(address, res));
+}
+
 export function createTask(event) {
   try {
     const address = event.address;
-    headersPromise
-      .then(headers => fetch(`${api_prefix}/${address}`, { headers }))
-      .then(res => processResponse(address, res))
+
+    fetchResponse(address)
       .then(storeResponse)
       .catch(error => {
         log.error({ error }, `failed to handle ${address}`);
