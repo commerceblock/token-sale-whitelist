@@ -6,7 +6,7 @@
           <img src="/static/assets/cb-logo-green.png" />
         </div>
         <div class="tab-title">
-          Welcome to CommerceBlock Whitelist Application
+          Welcome to the CommerceBlock Whitelist Service
         </div>
         <div class="modal-container">
           <div class="modal-body">
