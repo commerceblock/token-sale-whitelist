@@ -19,8 +19,8 @@
     "deploy:frontend:prod": "NODE_ENV=production CB_ENV=prod npm run deploy:frontend",
     "deploy:backend:prod": "NODE_ENV=production CB_ENV=prod npm run deploy:backend",
     "dev:frontend": "NODE_ENV=development env-cmd deployment/environment/security.env.local babel-watch deployment/dev-server/server.js",
-    "dev:backend": "NODE_ENV=development CB_ENV=test npm run dev:build:backend && cd build/backend-$CBT_ENV && serverless dynamodb install && serverless offline start --migrate true --stage $CB_ENV",
-    "dev:build:backend": "NODE_ENV=development babel --out-dir='build/backend-dev' --ignore='__tests__/*' ./backend && cp -R ./kms-secrets.*.yml ./env*.yml ./serverless.yml ./backend/data ./package.json ./yarn.lock ./build/backend-$CB_ENV",
+    "dev:backend": "NODE_ENV=development npm run dev:build:backend && npm run dev:build:backend:node_modules && cd build/backend-dev && serverless dynamodb install && serverless offline start --migrate true",
+    "dev:build:backend": "NODE_ENV=development babel --out-dir='build/backend-dev' --ignore='__tests__/*' ./backend && cp -R ./serverless.yml ./env* ./kms*.yml ./backend/data ./backend/package.json ./backend/yarn.lock ./build/backend-dev",
     "dev:build:backend:node_modules": "cd build/backend-dev && yarn && cd ../../",
     "lint": "npm run lint:eslint && npm run lint:css",
     "lint:eslint": "eslint .",
@@ -29,11 +29,7 @@
     "lint:staged": "lint-staged",
     "test": "NODE_ENV=test jest",
     "test:watch": "NODE_ENV=test jest --watch",
-    "test:coverage": "npm test -- --coverage --collectCoverageFrom 'frontend/**/*.js' --collectCoverageFrom 'backend/**/*.js' --collectCoverageFrom 'deployment/**/*.js'",
-    "dev:frontend": "NODE_ENV=development env-cmd deployment/environment/security.env.local babel-watch deployment/dev-server/server.js",
-    "dev:backend": "NODE_ENV=development npm run dev:build:backend && npm run dev:build:backend:node_modules && cd build/backend-dev && serverless dynamodb install && serverless offline start --migrate true",
-    "dev:build:backend": "NODE_ENV=development babel --out-dir='build/backend-dev' --ignore='__tests__/*' ./backend && cp -R ./serverless.yml ./env* ./kms*.yml ./backend/data ./backend/package.json ./backend/yarn.lock ./build/backend-dev",
-    "dev:build:backend:node_modules": "cd build/backend-dev && yarn && cd ../../"
+    "test:coverage": "npm test -- --coverage --collectCoverageFrom 'frontend/**/*.js' --collectCoverageFrom 'backend/**/*.js' --collectCoverageFrom 'deployment/**/*.js'"
   },
   "lint-staged": {
     "lint:eslint": "*.js",
@@ -63,7 +59,8 @@
     "vue-form-wizard": "^0.6.3",
     "vue-router": "^2.7.0",
     "vue-spinner": "^1.0.2",
-    "wallet-address-validator": "^0.1.1"
+    "wallet-address-validator": "^0.1.1",
+    "web3-utils": "^1.0.0-beta.24"
   },
   "devDependencies": {
     "aws-sdk": "^2.138.0",
