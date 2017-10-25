@@ -71,7 +71,7 @@
           </slot>
 
           <div class="text-center text-muted" id="modal-footer-note">
-            This is a check for AML compliance. If your sending address is rejected please contact us via our Telegram channel. For contributions of more than 11.5k USD please register for KYC once your address has been confirmed as verified
+            This is a check for AML compliance. If your sending address is rejected please contact us via our Telegram channel. For contributions of more than 11,500 USD please register for KYC once your address has been confirmed as verified
           </div>
 
         </div>
