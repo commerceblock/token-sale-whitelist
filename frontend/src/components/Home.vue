@@ -170,7 +170,7 @@ export default {
   },
   computed: {
     isAddressValid() {
-      return !isEmpty(this.address) && this.address.length >= 30 && this.address.length <= 80;
+      return !isEmpty(this.address) && this.address.length >= 34 && this.address.length <= 50;
     },
     isAmountValid() {
       try {
@@ -298,7 +298,7 @@ textarea {
   outline: 0 none;
 }
 
-.details-input-red input:focus {
+.details-input-green input:focus {
   border-color: #258C42;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
   outline: 0 none;

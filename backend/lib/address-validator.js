@@ -39,9 +39,9 @@ export function isEtherAddress(address) {
 export function checkEthOrBtcAddress(address) {
   if (address[0] !== '0' && address[1] !== 'x') {
     if (!WAValidator.validate(address, 'BTC', 'both')) {
-      throw new Error('Bitcoin Address not valid.');
+      throw new Error('Bitcoin Address is not valid, please enter a valid BTC or ETH address');
     }
   } else if (!isEtherAddress(address)) {
-    throw new Error('Ethereum Address not valid.');
+    throw new Error('Ethereum Address is not valid, please enter a valid BTC or ETH address');
   }
 }

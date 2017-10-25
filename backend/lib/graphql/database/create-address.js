@@ -1,5 +1,5 @@
 // imports
-import { find, isString } from 'lodash';
+import { find, isString, isEmpty } from 'lodash';
 
 // local imports
 import { loadEvents, saveEvent } from '../../../lib/events-store';
@@ -18,17 +18,17 @@ export function extractRefId(refId) {
 export default async (addressInput) => {
   const address = addressInput.address;
   // if length > 50, we throw immediatelly
-  if (isString(address) && address.length > 50) {
-    throw new Error('Address length is not valid.');
+  if (isEmpty(address) || (address.length > 50 || address.length < 30)) {
+    throw new Error('Address length is not valid, please enter a valid BTC or ETH address');
   }
+
+  // Otherwise, we go to check the address
+  checkEthOrBtcAddress(address);
 
   const amount = addressInput.amount;
   if (amount < minAmount || amount > maxAmount) {
     throw new Error(`Amount is not valid, please enter an amount between $${minAmount.toFixed(2)} - $${maxAmount.toFixed(2)}`);
   }
-
-  // Otherwise, we go to check the address
-  checkEthOrBtcAddress(address);
 
   return loadEvents(address)
     .then(events => {
