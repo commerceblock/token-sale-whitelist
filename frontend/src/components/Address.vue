@@ -22,10 +22,12 @@
                 </div>
                 <div class="row text-center">
                   This service may take up to 24 hours to complete. <br>
-                  Please return at a later date to check the status of the whitelisting.
+                  Please return soon to check the whitelisting status.
                 </div>
+                <br>
+                <br>
                 <div class="row text-center">
-                  You can contact <a href="mailto:info@commerceblock.com?Subject=Whitelist%20Issue">info@commerceblock.com</a> or ask on our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel if you have any issues.
+                  Please contact us via our <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg" target="_blank">Telegram</a> channel if you have any issues.
                 </div>
               </div>
 
