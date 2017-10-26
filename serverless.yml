@@ -19,7 +19,7 @@ custom:
       stage: sand020
       domainName: whitelist.commerceblock.ninja
     test:
-      stage: test024
+      stage: test025
       domainName: whitelist.test.commerceblock.ninja
   selectedStage: ${env:CB_ENV, self:custom.defaultStage}
   stage: ${self:custom.accounts.${self:custom.selectedStage}.stage}
@@ -51,8 +51,8 @@ provider:
     CB_DISABLED_COINFIRM_API: ${self:custom.externalConfig.coinfirm.disabled}
     # secrets
     CB_ENC_COINFIRM_API_TOKEN: ${self:custom.kmsSecrets.secrets.CB_ENC_COINFIRM_API_TOKEN}
-    CB_ENC_STORAGE_ACCESS_KEY: ${self:custom.kmsSecrets.secrets.CB_ENC_COINFIRM_API_TOKEN}
-    CB_ENC_STORAGE_SECRET_KEY: ${self:custom.kmsSecrets.secrets.CB_ENC_COINFIRM_API_TOKEN}
+    CB_ENC_STORAGE_ACCESS_KEY: ${self:custom.kmsSecrets.secrets.CB_ENC_STORAGE_ACCESS_KEY}
+    CB_ENC_STORAGE_SECRET_KEY: ${self:custom.kmsSecrets.secrets.CB_ENC_STORAGE_SECRET_KEY}
 
   iamRoleStatements:
     - Effect: Allow

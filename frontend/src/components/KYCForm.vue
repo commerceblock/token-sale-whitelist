@@ -17,7 +17,7 @@
             </slot>
           </div>
         </div>
-        <div v-if="status==='accepted'">
+        <div v-if="status==='pending'">
           <div class="modal-body">
             <slot name="body">
               <div class="row text-center">
@@ -26,11 +26,11 @@
             </slot>
           </div>
         </div>
-        <div v-if="status==='rejected'">
+        <div v-if="status==='rejected' || status==='close'">
           <div class="modal-body">
             <slot name="body">
               <div class="row text-center">
-                <h4>.</h4>
+                <h4>We can't accept an application for this address.</h4>
               </div>
             </slot>
           </div>
@@ -232,7 +232,7 @@ export default {
           });
     },
     handleCreateResult(response) {
-      this.$router.push(`/thank-you`);
+      this.$apollo.queries.listApplication.refetch();
     },
     handleGenericError(error) {
       console.log(error);

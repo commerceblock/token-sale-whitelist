@@ -37,7 +37,6 @@ export const address_status = {
   pending: 'pending',
   accepted: 'accepted',
   rejected: 'rejected',
-  close: 'close',
 };
 
 export const application_status = {
@@ -45,4 +44,5 @@ export const application_status = {
   pending: 'pending',
   open: 'open',
   rejected: 'rejected',
+  close: 'close',
 };

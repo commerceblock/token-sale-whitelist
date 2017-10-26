@@ -1,7 +1,7 @@
 import { coinfirm_api_token_encrypted } from './consts';
-import { decrypt } from '../lib/env-util';
+import { extract } from '../lib/env-util';
 
-export const coinfirmApiTokenPromise = decrypt(
+export const coinfirmApiTokenPromise = extract(
   'coinfirm_api_token',
   coinfirm_api_token_encrypted,
 );

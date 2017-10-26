@@ -2,15 +2,13 @@
 import { loadEvents, saveEvent } from '../../events-store';
 import { createOrderedId } from '../../uuid';
 import { event_type } from '../../../model/consts';
-import { isEmpty, first } from 'lodash';
+import { isEmpty, first, find } from 'lodash';
 
 export default async (input) => {
   const address = input.address;
   return loadEvents(address)
     .then(events => {
-      if (isEmpty(events)
-        || find(events, { type: event_type.application_created }) !== null
-        || find(events, { type: event_type.address_verified }) !== null) {
+      if (isEmpty(events)) {
         return null;
       }
       const data = {
