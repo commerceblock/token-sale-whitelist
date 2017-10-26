@@ -127,7 +127,7 @@ export default {
 
 <style scoped>
 .modal-mask {
-  position: fixed;
+  /* position: fixed; */
   z-index: 9998;
   top: 0;
   left: 0;
