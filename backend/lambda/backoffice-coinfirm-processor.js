@@ -99,8 +99,7 @@ export function fetchResponse(address) {
 export function createTask(event) {
   try {
     const address = event.address;
-
-    fetchResponse(address)
+    return fetchResponse(address)
       .then(storeResponse)
       .catch(error => {
         log.error({ error }, `failed to handle ${address}`);
