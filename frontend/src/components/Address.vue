@@ -138,15 +138,16 @@ export default {
   transition: opacity .3s ease;*/
   display: flex;
   justify-content: center;
+      margin-top: 30px;
 }
 
 .modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+  /*display: table-cell;
+  vertical-align: middle;*/
 }
 
 .modal-container {
-  width: 650px;
+  max-width: 650px;
   /*height: 500px;*/
   margin: 0px auto;
   padding: 20px 30px;
