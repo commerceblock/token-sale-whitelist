@@ -54,7 +54,7 @@ export function processResponse(address, result) {
     status: result.status,
     result,
   }, 'got failure');
-  return Promise.reject(`invlaid response, address=${address}`);
+  return Promise.reject(`invalid response, address=${address}`);
 }
 
 export function storeResponse(response) {
@@ -100,15 +100,13 @@ export function createTask(event) {
   try {
     const address = event.address;
     return fetchResponse(address)
-      .then(storeResponse)
-      .catch(error => {
-        log.error({ error }, `failed to handle ${address}`);
-      });
+      .then(storeResponse);
   } catch (error) {
     log.error({
       error,
       event,
     }, 'an error occured while processing event');
+    throw new Error('an error occured while processing event');
   }
 }
 
