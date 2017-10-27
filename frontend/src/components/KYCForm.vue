@@ -47,19 +47,19 @@
               <div class="form-horizontal" role="form">
                 <div class="form-group">
                   <label for="firstName" class="col-sm-3 control-label no-padding">First Name</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isFirstNameNotValid }">
                     <input type="text" id="firstName" placeholder="First Name" class="form-control" v-model="firstName" autofocus>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="lastName" class="col-sm-3 control-label no-padding">Last Name</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isLastNameNotValid }">
                     <input type="text" id="lastName" placeholder="Last Name" class="form-control" v-model="lastName" autofocus>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="title" class="col-sm-3 control-label no-padding">Title</label>
-                  <div class="col-sm-9 custom-radio-group">
+                  <div class="col-sm-9 custom-radio-group" v-bind:class="{ 'input-field-red': beforeSubmit && isTitleNotValid }">
                     <input type="radio" class="custom-radio" id="title-mr" value="Mr" v-model="title"><label class="custom-label" for="Mr">Mr</label>
                     <input type="radio" class="custom-radio" id="title-mrs" value="Mrs" v-model="title"><label class="custom-label" for="Mrs">Mrs</label>
                     <input type="radio" class="custom-radio" id="title-miss" value="Miss" v-model="title"><label class="custom-label" for="Miss">Miss</label>
@@ -68,44 +68,44 @@
                 </div>
                 <div class="form-group">
                   <label for="lastName" class="col-sm-3 control-label no-padding">Email</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isEmailNotValid }">
                     <input type="text" id="email" placeholder="Email" class="form-control" v-model="email" autofocus>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="gender" class="col-sm-3 control-label no-padding">Gender</label>
-                  <div class="col-sm-9 custom-radio-group">
+                  <div class="col-sm-9 custom-radio-group" v-bind:class="{ 'input-field-red': beforeSubmit && isGenderNotValid }">
                     <input type="radio" class="custom-radio" id="gender-male" value="male" v-model="gender"><label class="custom-label" for="male">Male</label>
                     <input type="radio" class="custom-radio" id="gender-female" value="female" v-model="gender"><label class="custom-label" for="female">Female</label>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="buildingNumber" class="col-sm-3 control-label no-padding">Building Number</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isBuildingNumberNotValid }">
                     <input type="text" id="buildingNumber" placeholder="Enter building number" class="form-control" v-model="buildingNumber" autofocus>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="streetName" class="col-sm-3 control-label no-padding">Street Name</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isStreetNameNotValid }">
                     <input type="text" id="streetName" placeholder="Enter street name" class="form-control" v-model="streetName" autofocus>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="postalCode" class="col-sm-3 control-label no-padding">Postal Code</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isPostalCodeNotValid }">
                     <input type="text" id="postalCode" placeholder="Enter postal code" class="form-control" v-model="postalCode" autofocus>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="city" class="col-sm-3 control-label no-padding">City</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isCityNotValid }">
                     <input type="text" id="city" placeholder="Enter city name" class="form-control" v-model="city" autofocus>
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="country" class="col-sm-3 control-label no-padding">Country</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isCountryNotValid }">
                     <select id="country" class="form-control" v-model="country" autofocus>
                         <option disabled value="">Please select one</option>
                         <option v-for="country in countries" :value="country">{{ country }}</option>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="form-group">
                   <label for="passport" class="col-sm-3 control-label no-padding">Passport number</label>
-                  <div class="col-sm-9">
+                  <div class="col-sm-9" v-bind:class="{ 'input-field-red': beforeSubmit && isPassportNumberNotValid }">
                     <input type="text" id="passport" placeholder="Enter passport number" class="form-control" v-model="passportNumber" autofocus>
                   </div>
                 </div>
@@ -132,7 +132,7 @@
           </div>
           <div class="modal-footer">
             <slot name="footer">
-              <button style="height: 40px; display: flex; justify-content: center; align-content: center" class="btn btn-success btn-lg btn-block" @click="submit" :disabled="isFormNotValid">
+              <button style="height: 40px; display: flex; justify-content: center; align-content: center" class="btn btn-success btn-lg btn-block" @click="submit">
                 <div v-if="idle">Submit</div>
                 <div v-if="!idle">
                   <div class="spinner">
@@ -161,7 +161,8 @@ import {
   isEmpty,
   map,
   find,
-  values
+  values,
+  first
 } from 'lodash';
 import list from '../lib/country-list.json';
 
@@ -184,16 +185,33 @@ export default {
       email: null,
       idle: true,
       errorResponse: null,
-      countries: values(list)
+      beforeSubmit: false,
+      countries: values(list),
     }
   },
   methods: {
     submit() {
+      this.beforeSubmit = false;
+      this.idle = false;
       // TODO:: toggle progress bar
       if (this.isFormNotValid) {
-        // TODO: do validations
+        this.beforeSubmit = true;
+        this.errorResponse = "Please check the red fields";
+        this.idle = true;
+      } else if(this.isFileNotValid) {
+        this.beforeSubmit = true;
+        if (this.$refs.passportImage && !isEmpty(this.$refs.passportImage.files)) {
+          const fileElem = first(this.$refs.passportImage.files)
+          if (fileElem.size && fileElem.size >= 100000) {
+            this.errorResponse = "Image maximum file size exceeded, please upload an image less than 5MB"
+          } else {
+            this.errorResponse = "Please select an image"
+          }
+        } else {
+          this.errorResponse = "Please select an image"
+        }
+        this.idle = true;
       } else {
-        this.idle = false
         // clear validations
         const that = this;
         that.uploadFile()
@@ -284,13 +302,66 @@ export default {
   },
   computed: {
     isFormNotValid() {
-      return false;
+      return this.isFirstNameNotValid
+        || this.isLastNameNotValid
+        || this.isTitleNotValid
+        || this.isEmailNotValid
+        || this.isGenderNotValid
+        || this.isBuildingNumberNotValid
+        || this.isStreetNameNotValid
+        || this.isPostalCodeNotValid
+        || this.isCityNotValid
+        || this.isCountryNotValid
+        || this.isPassportNumberNotValid;
     },
     apolloClient() {
       return this.$apollo.provider.defaultClient;
     },
     status () {
       return this.listApplication && this.listApplication.status;
+    },
+    isFirstNameNotValid () {
+      return isEmpty(this.firstName);
+    },
+    isLastNameNotValid () {
+      return isEmpty(this.lastName);
+    },
+    isTitleNotValid () {
+      return isEmpty(this.title);
+    },
+    isEmailNotValid() {
+      return isEmpty(this.email);
+    },
+    isGenderNotValid() {
+      return isEmpty(this.gender);
+    },
+    isBuildingNumberNotValid() {
+      return isEmpty(this.buildingNumber);
+    },
+    isStreetNameNotValid() {
+      return isEmpty(this.streetName);
+    },
+    isPostalCodeNotValid() {
+      return isEmpty(this.postalCode);
+    },
+    isCityNotValid() {
+      return isEmpty(this.city);
+    },
+    isCountryNotValid() {
+      return isEmpty(this.country);
+    },
+    isPassportNumberNotValid() {
+      return isEmpty(this.passportNumber);
+    },
+    isFileNotValid () {
+      if (this.$refs.passportImage) {
+        const imageFile = this.$refs.passportImage;
+        if (!isEmpty(imageFile.files)) {
+          const fileElement = first(imageFile.files)
+          return fileElement.size && fileElement.size >= 100000;
+        }
+      }
+      return false;
     }
   },
   apollo: {
@@ -500,6 +571,23 @@ input[type="file"] {
   padding: 0;
   line-height: 23px;
   text-align: center;
+}
+
+.input-field-red input[type="text"] {
+  border-color: red;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+  outline: 0 none;
+}
+
+.input-field-red select {
+  border-color: red;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(126, 239, 104, 0.6);
+  outline: 0 none;
+}
+
+.input-field-red input[type="radio"] {
+  background-color: #F0FFFF;
+  border: 1px solid red;
 }
 
 @-webkit-keyframes sk-bouncedelay {
