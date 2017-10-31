@@ -21,7 +21,7 @@
           <div class="modal-body">
             <slot name="body">
               <div class="row text-center">
-                <h4>Thank you for providing the information, will be processing your request and contact you as soon as possible.</h4>
+                <h4>Thank you for providing the KYC information. Don’t forget to sign up on the <a href="https://www.commerceblock.com">CommerceBlock website</a> for weekly news and reminders about key dates. Alternatively join us in <a href="https://t.me/joinchat/Ge36IURXhKAS_6HTznUXUg">Telegram</a> for a chat or follow on <a href="https://twitter.com/commerceblock">Twitter</a>.</h4>
               </div>
             </slot>
           </div>
@@ -166,6 +166,7 @@ import {
 } from 'lodash';
 import list from '../lib/country-list.json';
 
+const MAX_SIZE = 5242880
 
 export default {
   name: 'Home',
@@ -202,7 +203,7 @@ export default {
         this.beforeSubmit = true;
         if (this.$refs.passportImage && !isEmpty(this.$refs.passportImage.files)) {
           const fileElem = first(this.$refs.passportImage.files)
-          if (fileElem.size && fileElem.size >= 100000) {
+          if (fileElem.size && fileElem.size >= MAX_SIZE) {
             this.errorResponse = "Image maximum file size exceeded, please upload an image less than 5MB"
           } else {
             this.errorResponse = "Please select an image"
@@ -358,7 +359,7 @@ export default {
         const imageFile = this.$refs.passportImage;
         if (!isEmpty(imageFile.files)) {
           const fileElement = first(imageFile.files)
-          return fileElement.size && fileElement.size >= 100000;
+          return fileElement.size && fileElement.size >= MAX_SIZE;
         }
       }
       return false;

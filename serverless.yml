@@ -108,6 +108,10 @@ functions:
             Fn::GetAtt:
               - KinesisStream
               - Arn
+  backoffice-coinfirm-processor-reply:
+    name: ${self:provider.environment.CB_ENV_NAME}-backoffice-coinfirm-replay
+    handler: lambda/backoffice-coinfirm-processor-replay.process
+    timeout: 60
 
 resources:
   Resources:
